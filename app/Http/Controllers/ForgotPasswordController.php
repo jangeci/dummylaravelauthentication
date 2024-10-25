@@ -47,7 +47,7 @@ class ForgotPasswordController extends Controller
 
         $email = $request->email;
         $token = $request->token;
-        $password = Hash::make($request->passowrd);
+        $password = Hash::make($request->password);
 
         $emailCheck = DB::table('password_resets')->where('email', $email)->first();
         $tokenCheck = DB::table('password_resets')->where('token', $token)->first();

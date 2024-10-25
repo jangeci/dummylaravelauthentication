@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -35,6 +36,10 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request)
     {
+        if (User::where('email', $request->email)->exists()) {
+            return response()->json(['message' => 'Email already exists'], 400);
+        }
+
         try {
             $user = User::create([
                 'name' => $request->name,
@@ -47,7 +52,7 @@ class AuthController extends Controller
             return response()->json([
                 'message' => 'Registration success',
                 'user' => $user,
-                'token' => $token], 200);
+                'token' => $token], 201);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }
