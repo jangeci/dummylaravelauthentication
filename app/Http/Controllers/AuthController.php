@@ -20,6 +20,8 @@ class AuthController extends Controller
                 $user = Auth::user();
                 $token = $user->createToken('app')->accessToken;
 
+                Log::channel('token')->debug('testlogin:',[$token]);
+
                 return response()->json([
                     'message' => 'Login success',
                     'token' => $token,
