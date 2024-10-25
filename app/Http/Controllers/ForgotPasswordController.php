@@ -6,6 +6,7 @@ use App\Http\Requests\ForgotPasswordRequest;
 use App\Mail\ForgotPasswordMail;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use mysql_xdevapi\Exception;
 
@@ -41,7 +42,33 @@ class ForgotPasswordController extends Controller
         }
     }
 
-    public function resetPassword($token, ForgotPasswordRequest $request){
+    public function resetPassword(ForgotPasswordRequest $request){
 
+
+        $email = $request->email;
+        $token = $request->token;
+        $password = Hash::make($request->passowrd);
+
+        $emailCheck = DB::table('password_resets')->where('email', $email)->first();
+        $tokenCheck = DB::table('password_resets')->where('token', $token)->first();
+
+        if(!$emailCheck) {
+            return response([
+                'message' => 'Email not found',
+            ], 401);
+        }
+
+        if(!$tokenCheck) {
+            return response([
+                'token' => 'Pincode invalid',
+            ], 401);
+        }
+
+        DB::table('users')->where('email', $email)->update(['password' => $password]);
+        DB::table('password_resets')->where('email', $email)->delete();
+
+        return response([
+            'message' => 'Password changed successfully',
+        ], 200);
     }
 }
