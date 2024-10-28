@@ -6,7 +6,7 @@
 <body>
 Hi
 <br/>
-Change your password <a href="http://127.0.0.1:8000/reset-password/{{$token}}">Click here</a>
+Change your password <a href="http://localhost:5173/reset-password/{{$token}}">Click here</a>
 
 Pincode: {{$token}}
 </body>
