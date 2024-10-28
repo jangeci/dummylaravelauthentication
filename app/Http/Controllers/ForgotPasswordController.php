@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ForgotPasswordRequest;
+use App\Http\Requests\ResetPasswordRequest;
 use App\Mail\ForgotPasswordMail;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use mysql_xdevapi\Exception;
 
@@ -42,15 +44,13 @@ class ForgotPasswordController extends Controller
         }
     }
 
-    public function resetPassword(ForgotPasswordRequest $request)
+    public function resetPassword(ResetPasswordRequest $request)
     {
-
 
         $token = $request->token;
         $password = Hash::make($request->password);
 
         $tokenCheck = DB::table('password_resets')->where('token', $token)->first();
-
 
         if (!$tokenCheck) {
             return response([
